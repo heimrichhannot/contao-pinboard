@@ -1,0 +1,59 @@
+<div class="<?= $this->class; ?> pin<?php if ($this->unpublished): ?> unpublished<?php endif; ?><?php if ($this->isAuthor): ?> author<?php endif; ?>">
+	<?php if ($this->isAuthor): ?>
+		<div class="actions">
+			<a class="edit" href="<?php echo $this->editUrl; ?>"
+			   <?php if ($this->useModal): ?>data-toggle="modal" data-target="#modal_<?= $this->module->id; ?>"<?php endif; ?>>
+				<?php echo $GLOBALS['TL_LANG']['frontendedit']['editTitle']; ?>
+			</a>
+			<a class="delete" href="<?php echo $this->deleteUrl; ?>" data-message="<?php echo $GLOBALS['TL_LANG']['MSC']['pinboard']['deleteConfirm']; ?>">
+				<?php echo $GLOBALS['TL_LANG']['frontendedit']['deleteTitle']; ?>
+			</a>
+			<?php if ($this->isPublished): ?>
+				<a class="publish" href="<?php echo $this->publishUrl; ?>">
+					<?php echo $GLOBALS['TL_LANG']['frontendedit']['unpublishTitle']; ?>
+				</a>
+			<?php else: ?>
+				<a class="unpublish" href="<?php echo $this->publishUrl; ?>">
+					<?php echo $GLOBALS['TL_LANG']['frontendedit']['publishTitle']; ?>
+				</a>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
+
+	<a href="<?= $this->detailsUrl ?>"
+	   <?php if ($this->useModal): ?>data-toggle="modal" data-target="#modal_<?= $this->module->id; ?>"<?php endif; ?>>
+
+		<?php if ($this->isAuthor && $this->unpublished): ?>
+			<div class="unpublished"><?= $GLOBALS['TL_LANG']['MSC']['pinboard']['unpublishedYet'] ?></div>
+		<?php endif; ?>
+
+		<?php if ($this->media): ?>
+			<figure class="media<?php if ($this->raw['mediaType'] == 'video'): ?> video<?php endif; ?>">
+				<img src="<?= $this->media ?>" <?php echo $this->imgSizeParsed; ?> alt="<?= htmlentities($this->fields['headline']); ?>">
+			</figure>
+		<?php endif; ?>
+
+		<div class="content">
+			<h3><?= $this->fields['headline']; ?></h3>
+			<div class="text">
+				<?= \HeimrichHannot\Haste\Util\StringUtil::truncateHtml(strip_tags($this->fields['teaser']), 400); ?>
+			</div>
+			<div class="meta">
+				<div class="author">
+					<?= $this->fields['memberAuthor']; ?>
+
+					<time class="time" datetime="<?= date('c', $this->raw['date']); ?>">
+						<?= $this->ago; ?>
+					</time>
+				</div>
+				<div class="comments">
+					<span class="commentCount">
+						<span class="badge">
+							<?= $this->commentCount ?>
+						</span>
+					</span>
+				</div>
+			</div>
+		</div>
+	</a>
+</div>
