@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2016 Leo Feyer
+ * Copyright (c) 2005-2017 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -29,6 +29,7 @@ ClassLoader::addClasses(array
 	'HeimrichHannot\PinBoard\ModulePinBoardReader' => 'system/modules/pinboard/modules/ModulePinBoardReader.php',
 
 	// Classes
+	'HeimrichHannot\PinBoard\Backend\Module'       => 'system/modules/pinboard/classes/backend/Module.php',
 	'HeimrichHannot\PinBoard\PinBoard'             => 'system/modules/pinboard/classes/PinBoard.php',
 ));
 

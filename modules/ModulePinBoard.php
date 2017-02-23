@@ -9,78 +9,64 @@ use HeimrichHannot\YouTube\YouTubeVideo;
 
 class ModulePinBoard extends ModuleList
 {
-	protected $strTemplate = 'mod_pinboard';
-	protected $strWrapperId = 'pinboard_';
-	protected $strWrapperClass = 'pinboard';
+    protected $strTemplate     = 'mod_pinboard';
+    protected $strWrapperId    = 'pinboard_';
+    protected $strWrapperClass = 'frontendedit-list pinboard';
 
-	public function generate()
-	{
-		if (TL_MODE == 'BE')
-		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+    public function generate()
+    {
+        if (TL_MODE == 'BE')
+        {
+            $objTemplate           = new \BackendTemplate('be_wildcard');
+            $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0] ?: $this->type) . ' ###';
+            $objTemplate->title    = $this->headline;
+            $objTemplate->id       = $this->id;
+            $objTemplate->link     = $this->name;
+            $objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			$objTemplate->wildcard = '### FRONTENDEDIT PINBOARD NEWS LIST ###';
-			$objTemplate->title = $this->headline;
-			$objTemplate->id = $this->id;
-			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            return $objTemplate->parse();
+        }
 
-			return $objTemplate->parse();
-		}
+        return parent::generate();
+    }
 
-		$this->initialize();
+    protected function runBeforeTemplateParsing($objTemplate, $arrItem)
+    {
+        $objTemplate->ago          = DateUtil::getTimeElapsed($arrItem['raw']['date']);
+        $objTemplate->commentCount = \CommentsModel::countPublishedBySourceAndParent('tl_news', $arrItem['fields']['id']);
+        $objTemplate->isAuthor     = $arrItem['raw']['memberAuthor'] == \FrontendUser::getInstance()->id;
+        $this->imgSize             = deserialize($this->imgSize, true);
 
-		return parent::generate();
-	}
+        if ($objTemplate->isAuthor && !$arrItem['raw']['published'])
+        {
+            $objTemplate->unpublished = true;
+        }
 
-	protected function initialize()
-	{
-		$this->formHybridDataContainer = $this->objModel->formHybridDataContainer = 'tl_news';
-		$this->formHybridPalette = $this->objModel->formHybridPalette = 'pinboard';
-	}
+        // media
+        $strMedia = '';
 
-	protected function runBeforeTemplateParsing($objTemplate, $arrItem) {
-		$objTemplate->ago = DateUtil::getTimeElapsed($arrItem['raw']['date']);
-		$objTemplate->commentCount  = \CommentsModel::countPublishedBySourceAndParent('tl_news', $arrItem['fields']['id']);
-		$objTemplate->isAuthor = $arrItem['raw']['memberAuthor'] == \FrontendUser::getInstance()->id;
-		$this->imgSize = deserialize($this->imgSize, true);
+        if ($arrItem['raw']['mediaType'] == 'video')
+        {
+            $arrItem['fields']['addYouTube'] = true;
+            $arrItem['fields']['youtube']    = preg_replace('@.*watch\?v=([^&]+).*@i', '$1', $arrItem['fields']['pinBoardYouTube']);
+            $objYouTube                      = YouTubeVideo::getInstance()->setData($arrItem['fields']);
 
-		if ($objTemplate->isAuthor && !$arrItem['raw']['published'])
-			$objTemplate->unpublished = true;
+            $strMedia = $objYouTube->getCachedYouTubePreviewImage();
+        }
+        elseif ($arrItem['fields']['pinBoardImage'])
+        {
+            $strMedia = $arrItem['fields']['pinBoardImage'];
+        }
 
-		// media
-		$strMedia = '';
+        if ($strMedia)
+        {
+            $objTemplate->media = \Image::get($strMedia, $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
+            $arrSize            = getimagesize(urldecode(TL_ROOT . '/' . $objTemplate->media));
 
-		if ($arrItem['raw']['mediaType'] == 'video')
-		{
-			$arrItem['fields']['addYouTube'] = true;
-			$arrItem['fields']['youtube'] = preg_replace('@.*watch\?v=([^&]+).*@i', '$1', $arrItem['fields']['pinBoardYouTube']);
-			$objYouTube = YouTubeVideo::getInstance()->setData($arrItem['fields']);
-
-			$strMedia = $objYouTube->getCachedYouTubePreviewImage();
-		}
-		elseif ($arrItem['fields']['pinBoardImage'])
-		{
-			$strMedia = $arrItem['fields']['pinBoardImage'];
-		}
-
-		if ($strMedia)
-		{
-			$objTemplate->media = \Image::get($strMedia, $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
-			$arrSize = getimagesize(urldecode(TL_ROOT . '/' . $objTemplate->media));
-
-			if (count($arrSize) > 1)
-				$objTemplate->imgSizeParsed = 'width="' . $arrSize[0] . '" height="' . $arrSize[1] . '"';
-		}
-	}
-
-	protected function compile()
-	{
-		$objJs = new \FrontendTemplate('j_pinboard');
-		$this->Template->js = $objJs->parse();
-
-		return parent::compile();
-	}
-
-
+            if (count($arrSize) > 1)
+            {
+                $objTemplate->imgSizeParsed = 'width="' . $arrSize[0] . '" height="' . $arrSize[1] . '"';
+            }
+        }
+    }
 }
