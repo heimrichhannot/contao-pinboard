@@ -54,7 +54,7 @@ class ModulePinBoardReader extends ModuleReader
 
         if ($strMedia && $objItem->raw['mediaType'] == 'image')
         {
-            $objTemplate->media = \Image::get($strMedia, $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
+            $objTemplate->media = \Image::get(str_replace(\Environment::get('url'), '', $strMedia), $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
             $arrSize            = getimagesize(urldecode(TL_ROOT . '/' . $objTemplate->media));
 
             if (count($arrSize) > 1)
