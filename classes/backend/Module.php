@@ -16,7 +16,6 @@ class Module extends \Backend
         if (HastePlusModule::isSubModuleOf($objModule->type, 'HeimrichHannot\PinBoard\ModulePinBoard'))
         {
             $objModule->formHybridDataContainer = 'tl_news';
-            $objModule->formHybridPalette       = 'pinboard';
             $objModule->showInitialResults      = true;
             $objModule->addDetailsCol           = true;
             $objModule->addMasonry              = true;
@@ -54,7 +53,8 @@ class Module extends \Backend
         )
         {
             $objModule->formHybridDataContainer = 'tl_news';
-            $objModule->formHybridPalette       = 'pinboard';
+            $objModule->formHybridAllowIdAsGetParameter = true;
+            $objModule->formHybridResetAfterSubmission = false;
 
             if (!$objModule->updateDeleteConditions)
             {
@@ -116,7 +116,7 @@ class Module extends \Backend
         )
         {
             $objModule->formHybridDataContainer = 'tl_news';
-            $objModule->formHybridPalette       = 'pinboard';
+            $objModule->aliasField = 'alias';
 
             if (!$objModule->itemTemplate)
             {

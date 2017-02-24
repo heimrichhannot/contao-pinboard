@@ -34,7 +34,7 @@ class ModulePinBoard extends ModuleList
     {
         $objTemplate->ago          = DateUtil::getTimeElapsed($arrItem['raw']['date']);
         $objTemplate->commentCount = \CommentsModel::countPublishedBySourceAndParent('tl_news', $arrItem['fields']['id']);
-        $objTemplate->isAuthor     = $arrItem['raw']['memberAuthor'] == \FrontendUser::getInstance()->id;
+        $objTemplate->isAuthor     = ($arrItem['raw']['memberAuthor'] == \FrontendUser::getInstance()->id);
         $this->imgSize             = deserialize($this->imgSize, true);
 
         if ($objTemplate->isAuthor && !$arrItem['raw']['published'])
@@ -53,14 +53,14 @@ class ModulePinBoard extends ModuleList
 
             $strMedia = $objYouTube->getCachedYouTubePreviewImage();
         }
-        elseif ($arrItem['fields']['pinBoardImage'])
+        elseif ($arrItem['raw']['pinBoardImage'])
         {
             $strMedia = $arrItem['fields']['pinBoardImage'];
         }
 
         if ($strMedia)
         {
-            $objTemplate->media = \Image::get($strMedia, $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
+            $objTemplate->media = \Image::get(str_replace(\Environment::get('url'), '', $strMedia), $this->imgSize[0], $this->imgSize[1], $this->imgSize[2]);
             $arrSize            = getimagesize(urldecode(TL_ROOT . '/' . $objTemplate->media));
 
             if (count($arrSize) > 1)

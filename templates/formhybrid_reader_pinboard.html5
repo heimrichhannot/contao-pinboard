@@ -1,28 +1,28 @@
 <div class="pin block">
-	<h3><?= $this->headline; ?></h3>
+    <h3><?= $this->headline; ?></h3>
 
-	<?php if ($this->media): ?>
-		<figure class="media<?php if ($this->raw['mediaType'] == 'video'): ?> video<?php endif; ?>">
-			<?php if ($this->raw['mediaType'] == 'video'): ?>
-				<?= $this->media ?>
-			<?php else: ?>
-				<img src="<?= $this->media ?>" <?php echo $this->imgSizeParsed; ?> alt="<?= htmlentities($this->fields['headline']); ?>">
-			<?php endif; ?>
-		</figure>
-	<?php endif; ?>
+    <?php if ($this->media): ?>
+        <figure class="media<?php if ($this->raw['mediaType'] == 'video'): ?> video<?php endif; ?>">
+            <?php if ($this->raw['mediaType'] == 'video'): ?>
+                <?= $this->media ?>
+            <?php else: ?>
+                <img src="<?= $this->media ?>" <?php echo $this->imgSizeParsed; ?> alt="<?= htmlentities($this->fields['headline']); ?>">
+            <?php endif; ?>
+        </figure>
+    <?php endif; ?>
 
-	<div class="content">
-		<div class="text">
-			<?= $this->teaser ?>
-		</div>
-	</div>
+    <div class="content">
+        <div class="text">
+            <?= $this->teaser ?>
+        </div>
+    </div>
 
-	<div class="meta">
-		<div class="author">
-			<?= $this->memberAuthor ?>
-		</div>
-		<time datetime="<?= date('c', $this->raw['date']); ?>">
-			<?= $this->date; ?>
-		</time>
-	</div>
+    <div class="meta">
+        <div class="author">
+            <?= $this->memberAuthor ?>
+        </div>
+        <time datetime="<?= date('c', $this->raw['date']); ?>">
+            <?= $this->date; ?>
+        </time>
+    </div>
 </div>
