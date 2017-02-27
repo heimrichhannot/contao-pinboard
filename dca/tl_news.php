@@ -22,8 +22,8 @@ $arrDca['subpalettes']['mediaType_video'] = 'pinBoardYouTube';
 /**
  * Callbacks
  */
-$arrDca['config']['onload_callback'][]   = ['tl_news_pinboard', 'modifyPalette'];
-$arrDca['config']['onsubmit_callback'][] = ['tl_news_pinboard', 'generateAlias'];
+$arrDca['config']['onload_callback'][]   = ['HeimrichHannot\PinBoard\Backend\News', 'modifyPalette'];
+$arrDca['config']['onsubmit_callback'][] = ['HeimrichHannot\PinBoard\Backend\News', 'generateAlias'];
 
 /**
  * Fields
@@ -73,34 +73,3 @@ $arrDca['fields'] += $arrFields;
 
 $arrDca['fields']['pinBoardYouTube']['sql']       = "varchar(255) NOT NULL default ''";
 $arrDca['fields']['headline']['eval']['tl_class'] = 'w50 clr';
-
-class tl_news_pinboard
-{
-
-    public static function modifyPalette()
-    {
-        $arrDca = &$GLOBALS['TL_DCA']['tl_news'];
-
-        if (($objNews = \NewsModel::findByPk(\Input::get('id'))) !== null && $objNews->useMemberAuthor)
-        {
-            $arrDca['palettes']['pinboard'] = str_replace(',author', ',', $arrDca['palettes']['pinboard']);
-        }
-        else
-        {
-            $arrDca['palettes']['pinboard'] = str_replace(',memberAuthor', ',', $arrDca['palettes']['pinboard']);
-        }
-    }
-
-    public static function generateAlias()
-    {
-        if (TL_MODE == 'FE')
-        {
-            if (($objNews = \NewsModel::findByPk(\Input::get('id'))) !== null && $objNews->type == 'pinboard')
-            {
-                $objNews->alias = \HeimrichHannot\Haste\Dca\General::generateAlias($objNews->alias, $objNews->id, 'tl_news', $objNews->headline);
-                $objNews->save();
-            }
-        }
-    }
-
-}

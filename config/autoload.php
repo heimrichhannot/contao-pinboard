@@ -12,17 +12,17 @@
 /**
  * Register the namespaces
  */
-ClassLoader::addNamespaces(
-    [
-	'HeimrichHannot',]
-);
+ClassLoader::addNamespaces(array
+(
+	'HeimrichHannot',
+));
 
 
 /**
  * Register the classes
  */
-ClassLoader::addClasses(
-    [
+ClassLoader::addClasses(array
+(
 	// Modules
 	'HeimrichHannot\PinBoard\ModulePinBoardEditor' => 'system/modules/pinboard/modules/ModulePinBoardEditor.php',
 	'HeimrichHannot\PinBoard\ModulePinBoard'       => 'system/modules/pinboard/modules/ModulePinBoard.php',
@@ -30,17 +30,17 @@ ClassLoader::addClasses(
 
 	// Classes
 	'HeimrichHannot\PinBoard\Backend\Module'       => 'system/modules/pinboard/classes/backend/Module.php',
-	'HeimrichHannot\PinBoard\PinBoard'             => 'system/modules/pinboard/classes/PinBoard.php',]
-);
+	'HeimrichHannot\PinBoard\Backend\News'         => 'system/modules/pinboard/classes/backend/News.php',
+	'HeimrichHannot\PinBoard\PinBoard'             => 'system/modules/pinboard/classes/PinBoard.php',
+));
 
 
 /**
  * Register the templates
  */
-TemplateLoader::addFiles(
-    [
+TemplateLoader::addFiles(array
+(
 	'mod_pinboard'                    => 'system/modules/pinboard/templates',
 	'frontendedit_list_item_pinboard' => 'system/modules/pinboard/templates',
-	'j_pinboard'                      => 'system/modules/pinboard/templates',
-	'formhybrid_reader_pinboard'      => 'system/modules/pinboard/templates',]
-);
+	'formhybrid_reader_pinboard'      => 'system/modules/pinboard/templates',
+));
